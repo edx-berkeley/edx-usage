@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Intermediate output files (regenerated each run, not needed in repo)
+output/
+
+# Environment
+.env
+*.env
+**/users.csv
+.DS_Store

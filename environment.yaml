@@ -1,0 +1,10 @@
+name: edx-usage
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pandas
+  - requests
+  - python-dotenv

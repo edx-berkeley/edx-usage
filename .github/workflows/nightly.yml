@@ -1,0 +1,35 @@
+name: Nightly Dashboard Update
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # 6am UTC every night (10pm PT / 11pm PDT)
+  workflow_dispatch:        # allow manual trigger from GitHub UI
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests pandas
+
+      - name: Run pipeline
+        env:
+          JUPYTERHUB_TOKEN: ${{ secrets.JUPYTERHUB_TOKEN }}
+        run: python main.py
+
+      - name: Commit and push dashboard
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dashboard/
+          git diff --cached --quiet || git commit -m "chore: nightly dashboard update $(date -u +%Y-%m-%d)"
+          git push
