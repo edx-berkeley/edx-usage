@@ -13,15 +13,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up conda environment
+        uses: conda-incubator/setup-miniconda@v3
         with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: pip install requests pandas
+          environment-file: environment.yaml
+          activate-environment: edx-usage
+          auto-activate-base: false
 
       - name: Run pipeline
+        shell: bash -el {0}
         env:
           JUPYTERHUB_TOKEN: ${{ secrets.JUPYTERHUB_TOKEN }}
         run: python main.py
@@ -30,6 +30,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dashboard/
+          git add docs/ data/
           git diff --cached --quiet || git commit -m "chore: nightly dashboard update $(date -u +%Y-%m-%d)"
           git push
